@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -29,77 +26,6 @@ type Studio struct{
 }
 
 var Movies []Movie
-
-
-
-
-func GetMovies(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "applicatin/json")
-	json.NewEncoder(w).Encode(Movies)
-}
-
-func DeleteMovie(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type","application/json")
-	
-	// Take movie id as a param 
-	params := mux.Vars(r)
-
-	for index, item := range Movies{
-
-		if item.ID == params["id"] {
-			Movies = append(Movies[:index], Movies[index+1:]... )
-			break 
-		}
-	}
-
-	json.NewEncoder(w).Encode(Movies)
-}
-
-func GetMovie(w http.ResponseWriter, r *http.Request){
-
-	w.Header().Set("Content-Type","application/json")
-	params := mux.Vars(r)
-
-	for _, item := range Movies{
-		if item.ID == params["id"]{
-			json.NewEncoder(w).Encode(item)
-			return
-		}
-	}
-}
-
-func CreateMovie(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type","application/json")
-
-	var movie Movie
-
-	_ = json.NewDecoder(r.Body).Decode(&movie)
-
-	movie.ID =  strconv.Itoa(rand.Intn(10000000))
-	Movies = append(Movies, movie)
-
-	json.NewEncoder(w).Encode(movie)
-}
-
-func UpdateMovie(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type","application/json")
-
-	
-
-	params := mux.Vars(r)
-
-	for index, item := range Movies{
-		if item.ID == params["id"]{ 
-			Movies = append(Movies[:index], Movies[index+1:]... )
-			var updatedMovie Movie
-			_ =json.NewDecoder(r.Body).Decode(&updatedMovie)
-			updatedMovie.ID = params["id"]
-
-			Movies = append(Movies,updatedMovie)
-			json.NewEncoder(w).Encode(Movies)
-		}
-	}
-}
 
 func main(){
 
@@ -183,7 +109,7 @@ func main(){
 	router.HandleFunc("/movies", GetMovies).Methods("GET")
 
 	// get movie with ID
-	router.HandleFunc("/movies/{id}", GetMovie2).Methods("GET")
+	router.HandleFunc("/movies/{id}", GetMovie).Methods("GET")
 
 	// create a movie
 	router.HandleFunc("/movies", CreateMovie).Methods("POST")
