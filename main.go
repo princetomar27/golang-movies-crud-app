@@ -183,7 +183,7 @@ func main(){
 	router.HandleFunc("/movies", GetMovies).Methods("GET")
 
 	// get movie with ID
-	router.HandleFunc("/movie", GetMovie2).Methods("GET")
+	router.HandleFunc("/movies/{id}", GetMovie2).Methods("GET")
 
 	// create a movie
 	router.HandleFunc("/movies", CreateMovie).Methods("POST")
